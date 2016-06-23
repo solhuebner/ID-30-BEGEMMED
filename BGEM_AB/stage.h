@@ -4,6 +4,8 @@
 #include <Arduino.h>
 #include "globals.h"
 
+
+
 // playfield
 //-----------
 
@@ -32,21 +34,15 @@ void removeFlag()
 
 void drawbackground()
 {
-  arduboy.drawBitmap(30, 37, timerMask_bitmap, 5, 24, BLACK);
-  arduboy.drawBitmap(30, 61 - timer, timer_bitmap, 5, 24, WHITE);
-  arduboy.drawBitmap(30, 62, timerMask2_bitmap, 1, 8, BLACK);
-  arduboy.drawBitmap(0, 0, background_bitmap, 64, 64, WHITE);
-  arduboy.drawBitmap(8, 44, pumpmask_bitmap, 15, 10, BLACK);
-  arduboy.drawBitmap(8, 44, pump_bitmaps[animationFrame], 15, 10, WHITE);
-  arduboy.drawBitmap(41, 44, gearmask_bitmap, 19, 17, BLACK);
-  arduboy.drawBitmap(41, 44, gear_bitmaps[animationFrame], 19, 17, WHITE);
-  arduboy.drawBitmap(4, 33, gaugeneedlemask_bitmap, 3, 3, BLACK);
-  arduboy.drawBitmap(4, 33, gaugeneedle_bitmaps[animationFrame], 3, 3, WHITE);
-  arduboy.drawBitmap(0, 54, smokemask_bitmap, 7, 8, BLACK);
-  arduboy.drawBitmap(12, 54, smokemask_bitmap, 7, 8, BLACK);
-  arduboy.drawBitmap(12 * smokeLeftRight, 54, smoke_bitmaps[smokeFrame], 7, 8, WHITE);
-  arduboy.drawBitmap(1, 13, bellowmask_bitmap, 7, 8, BLACK);
-  arduboy.drawBitmap(1, 13, bellow_bitmaps[animationFrame], 7, 8, WHITE);
+  sprites.drawSelfMasked(30, 61 - timer, timerTube, 0);
+  sprites.drawSelfMasked(30, 62, timerMask, 0);
+  sprites.drawSelfMasked(1, 0, title, 0);
+  sprites.drawSelfMasked(0, 14, backGround, 0);
+  sprites.drawSelfMasked(8, 44, pump, pgm_read_byte (&pumpSequence[animationFrame]));
+  sprites.drawSelfMasked(41, 44, gear, animationFrame);
+  sprites.drawSelfMasked(4, 33, gaugeNeedle, pgm_read_byte (&gaugeNeedleSequence[animationFrame]));
+  sprites.drawSelfMasked(12 * smokeLeftRight, 54, smoke, pgm_read_byte (&smokeSequence[smokeFrame]));
+  sprites.drawSelfMasked(1, 13, bellow, pgm_read_byte (&bellowSequence[animationFrame]));
 
 };
 
@@ -58,7 +54,7 @@ void drawField()
     for (int x = 0 ; x < PLAYFIELD_WIDTH; x++)
     {
       // draw every tile in the playfield
-      arduboy.drawBitmap((x * GEM_PIXELS) + PLAYFIELD_ZERO_X, (y * GEM_PIXELS) + PLAYFIELD_ZERO_Y, gemsinverted_bitmaps[field[x][y]], 8, 8, WHITE);
+      sprites.drawPlusMask((x * GEM_PIXELS) + PLAYFIELD_ZERO_X, (y * GEM_PIXELS) + PLAYFIELD_ZERO_Y, gemsSmall_plus_mask,field[x][y]);
     }
   }
 }
@@ -68,13 +64,13 @@ void drawSelector()
   switch (modeIsSelected)
   {
     case false:
-      arduboy.drawBitmap(PLAYFIELD_ZERO_X + (selectorXpos * GEM_PIXELS), selectorYpos * GEM_PIXELS, selector_bitmaps[selectorFrame], 8, 8, BLACK);
+      sprites.drawPlusMask(PLAYFIELD_ZERO_X + (selectorXpos * GEM_PIXELS), selectorYpos * GEM_PIXELS, selector_plus_mask, selectorFrame);
       break;
     case true:
-      arduboy.drawBitmap(PLAYFIELD_ZERO_X + (selectorXpos * GEM_PIXELS) - GEM_PIXELS, selectorYpos * GEM_PIXELS, selector_bitmaps[selectorFrame], 8, 8, BLACK);
-      arduboy.drawBitmap(PLAYFIELD_ZERO_X + (selectorXpos * GEM_PIXELS) + GEM_PIXELS, selectorYpos * GEM_PIXELS, selector_bitmaps[selectorFrame], 8, 8, BLACK);
-      arduboy.drawBitmap(PLAYFIELD_ZERO_X + (selectorXpos * GEM_PIXELS), (selectorYpos * GEM_PIXELS) - GEM_PIXELS, selector_bitmaps[selectorFrame], 8, 8, BLACK);
-      arduboy.drawBitmap(PLAYFIELD_ZERO_X + (selectorXpos * GEM_PIXELS), (selectorYpos * GEM_PIXELS) + GEM_PIXELS, selector_bitmaps[selectorFrame], 8, 8, BLACK);
+      sprites.drawPlusMask(PLAYFIELD_ZERO_X + (selectorXpos * GEM_PIXELS) - GEM_PIXELS, selectorYpos * GEM_PIXELS, selector_plus_mask, selectorFrame);
+      sprites.drawPlusMask(PLAYFIELD_ZERO_X + (selectorXpos * GEM_PIXELS) + GEM_PIXELS, selectorYpos * GEM_PIXELS, selector_plus_mask, selectorFrame);
+      sprites.drawPlusMask(PLAYFIELD_ZERO_X + (selectorXpos * GEM_PIXELS), (selectorYpos * GEM_PIXELS) - GEM_PIXELS, selector_plus_mask, selectorFrame);
+      sprites.drawPlusMask(PLAYFIELD_ZERO_X + (selectorXpos * GEM_PIXELS), (selectorYpos * GEM_PIXELS) + GEM_PIXELS, selector_plus_mask, selectorFrame);
       break;
   }
 }
@@ -131,7 +127,8 @@ void drawScore(int scoreX, int scoreY, byte sizeScore)
   switch (sizeScore)
   {
     case SCORE_SMALL:
-      if (blinkTubes == true) arduboy.drawBitmap(scoreX + flickerPlace, scoreY, numberBlink_bitmaps[blinkFrame], 3, 8, BLACK);
+      if (blinkTubes == true)
+      sprites.drawErase(scoreX + flickerPlace, scoreY, numberMask, pgm_read_byte (&numberBlinkSequence[blinkFrame]));
       break;
   }
 }
@@ -232,7 +229,7 @@ void addNewGems()
     if (IsGemFree(column, 0))
     {
       field[column][0] = random (1, 5 + gameMode);
-      arduboy.drawBitmap((column * GEM_PIXELS) + PLAYFIELD_ZERO_X, 0, gemsinverted_bitmaps[0], 8, 8, BLACK);
+      sprites.drawPlusMask((column * GEM_PIXELS) + PLAYFIELD_ZERO_X, 0, gemsSmall_plus_mask, 0);
     }
   }
 }
@@ -290,8 +287,7 @@ void moveGemsDown()
           field [column][row] = field [column][row - 1];
           field [column][row - 1] = GEM_FREE;
           drawField();
-          arduboy.drawBitmap((column * GEM_PIXELS) + PLAYFIELD_ZERO_X, (row * GEM_PIXELS) + PLAYFIELD_ZERO_Y, gemsinverted_bitmaps[0], 8, 8, BLACK);
-          arduboy.drawBitmap((column * GEM_PIXELS) + PLAYFIELD_ZERO_X, (row * GEM_PIXELS) + PLAYFIELD_ZERO_Y, gemsinverted_bitmaps[field[column][row]], 8, 8, WHITE);
+          sprites.drawPlusMask((column * GEM_PIXELS) + PLAYFIELD_ZERO_X, (row * GEM_PIXELS) + PLAYFIELD_ZERO_Y, gemsSmall_plus_mask,field[column][row]);
           arduboy.display();
           canMoveGemsDown = true;
           //delay(30);
@@ -342,11 +338,11 @@ void switchGem(int directionToSwitch)
     testingSwitch++;
     removeGems();
   }
-  arduboy.drawBitmap((selectorXpos * GEM_PIXELS) + PLAYFIELD_ZERO_X, (selectorYpos * GEM_PIXELS) + PLAYFIELD_ZERO_Y, gemsinverted_bitmaps[0], 8, 8, BLACK);
-  arduboy.drawBitmap(((selectorXpos + 1) * GEM_PIXELS) + PLAYFIELD_ZERO_X, (selectorYpos * GEM_PIXELS) + PLAYFIELD_ZERO_Y, gemsinverted_bitmaps[0], 8, 8, BLACK);
-  arduboy.drawBitmap(((selectorXpos - 1) * GEM_PIXELS) + PLAYFIELD_ZERO_X, (selectorYpos * GEM_PIXELS) + PLAYFIELD_ZERO_Y, gemsinverted_bitmaps[0], 8, 8, BLACK);
-  arduboy.drawBitmap((selectorXpos * GEM_PIXELS) + PLAYFIELD_ZERO_X, ((selectorYpos + 1) * GEM_PIXELS) + PLAYFIELD_ZERO_Y, gemsinverted_bitmaps[0], 8, 8, BLACK);
-  arduboy.drawBitmap((selectorXpos * GEM_PIXELS) + PLAYFIELD_ZERO_X, ((selectorYpos - 1) * GEM_PIXELS) + PLAYFIELD_ZERO_Y, gemsinverted_bitmaps[0], 8, 8, BLACK);
+  sprites.drawPlusMask((selectorXpos * GEM_PIXELS) + PLAYFIELD_ZERO_X, (selectorYpos * GEM_PIXELS) + PLAYFIELD_ZERO_Y, gemsSmall_plus_mask,0);
+  sprites.drawPlusMask(((selectorXpos + 1) * GEM_PIXELS) + PLAYFIELD_ZERO_X, (selectorYpos * GEM_PIXELS) + PLAYFIELD_ZERO_Y, gemsSmall_plus_mask,0);
+  sprites.drawPlusMask(((selectorXpos - 1) * GEM_PIXELS) + PLAYFIELD_ZERO_X, (selectorYpos * GEM_PIXELS) + PLAYFIELD_ZERO_Y, gemsSmall_plus_mask,0);
+  sprites.drawPlusMask((selectorXpos * GEM_PIXELS) + PLAYFIELD_ZERO_X, ((selectorYpos + 1) * GEM_PIXELS) + PLAYFIELD_ZERO_Y, gemsSmall_plus_mask,0);
+  sprites.drawPlusMask((selectorXpos * GEM_PIXELS) + PLAYFIELD_ZERO_X, ((selectorYpos - 1) * GEM_PIXELS) + PLAYFIELD_ZERO_Y, gemsSmall_plus_mask,0);
   testingSwitch = 0;
   if (modeIsSelected == true)arduboy.audio.tone(330, 25);
 }

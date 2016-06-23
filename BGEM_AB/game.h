@@ -11,7 +11,7 @@ boolean objectVisible;
 void stateMenuPlay()
 {
   arduboy.clearDisplay();
-  level = level = LEVEL_TO_START_WITH -1;
+  level = level = LEVEL_TO_START_WITH - 1;
   scorePlayer = 0;
   initPlayfield();
   removeFlag();
@@ -23,8 +23,8 @@ void stateMenuPlay()
   canMoveGemsDown = true;
   giveExtraScore = false;
   for (byte i = 0; i < 4; i++) sprites.drawSelfMasked(32 * i, 0, splashScreen, i);
-  arduboy.drawBitmap(0, 48, gameOver_bitmap, 128, 16, WHITE);
-  arduboy.drawBitmap(33, 52, gameMode_bitmaps[gameMode - 1], 62, 8, WHITE);
+  for (byte i = 0; i < 2; i++) sprites.drawSelfMasked(64 * i, 48, tubes, i);
+  sprites.drawSelfMasked(33, 52, gameWords, gameMode - 1);
   if (arduboy.justPressed(RIGHT_BUTTON) && (gameMode < 3)) gameMode++;
   if (arduboy.justPressed(LEFT_BUTTON) && (gameMode > 1)) gameMode--;
   if (arduboy.justPressed(A_BUTTON | B_BUTTON))
@@ -80,7 +80,8 @@ void stateGamePlaying()
 void stateGamePause()
 {
   for (byte i = 0; i < 4; i++) sprites.drawSelfMasked(32 * i, 0, splashScreen, i);
-  arduboy.drawBitmap(0, 48, pause_bitmap, 128, 16, WHITE);
+  for (byte i = 0; i < 2; i++) sprites.drawSelfMasked(64 * i, 48, tubes, i);
+  sprites.drawSelfMasked(33, 52, gameWords, 3);
   if (arduboy.justPressed(A_BUTTON))
   {
     arduboy.clearDisplay();
@@ -92,7 +93,7 @@ void stateGamePause()
 void stateGameOver()
 {
   for (byte i = 0; i < 4; i++) sprites.drawSelfMasked(32 * i, 0, splashScreen, i);
-  arduboy.drawBitmap(0, 48, gameOver_bitmap, 128, 16, WHITE);
+  for (byte i = 0; i < 2; i++) sprites.drawSelfMasked(64 * i, 48, tubes, i);
   drawScore(41, 52, SCORE_BIG);
   if (arduboy.justPressed(A_BUTTON | B_BUTTON))
   {
