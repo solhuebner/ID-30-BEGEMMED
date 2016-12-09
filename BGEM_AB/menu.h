@@ -44,7 +44,7 @@ void stateMenuInfo()
 
 void stateMenuSoundfx()
 {
-  arduboy.clearDisplay();
+  arduboy.clear();
   for (byte i = 0; i < 4; i++) sprites.drawSelfMasked(32 * i, 0, splashScreen, i);
   sprites.drawSelfMasked(0, 48, mainMenu, 4 + arduboy.audio.enabled());
   sprites.drawSelfMasked(64, 48, mainMenu, 6 + 4 + arduboy.audio.enabled());
