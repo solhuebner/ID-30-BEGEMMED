@@ -20,7 +20,7 @@ void checkInputs()
   if (arduboy.justPressed(B_BUTTON))modeIsSelected = !modeIsSelected;
   if (arduboy.justPressed(A_BUTTON))
   {
-    arduboy.clearDisplay();
+    arduboy.clear();
     gameState = STATE_GAME_PAUSE;
   }
 }

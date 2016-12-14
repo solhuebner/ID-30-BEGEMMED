@@ -2,7 +2,8 @@
 #define GLOBALS_H
 
 #include <Arduino.h>
-#include "Arglib.h"
+#include <Arduboy2.h>
+#include <ArduboyTones.h>
 #include "bitmaps.h"
 
 
@@ -44,8 +45,9 @@
 
 #define LEVEL_TO_START_WITH          1
 
-Arduboy arduboy;
-Sprites sprites(arduboy);
+Arduboy2Base arduboy;
+Sprites sprites;
+ArduboyTones sound(arduboy.audio.enabled);
 
 byte gameState = STATE_MENU_INTRO;   // start the game with the TEAM a.r.g. logo
 byte menuSelection = STATE_MENU_PLAY; // PLAY menu item is pre-selected

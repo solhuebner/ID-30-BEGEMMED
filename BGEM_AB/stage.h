@@ -255,9 +255,9 @@ void deleteGems()
   {
     scorePlayer += extraScoreForChain;
     extraScoreForChain += 100;
-    arduboy.audio.tone(440, 100);
+    sound.tone(440, 100);
     delay(100);
-    arduboy.audio.tone(1047, 200);
+    sound.tone(1047, 200);
   }
   giveExtraScore = false;
   removeFlag();
@@ -344,7 +344,7 @@ void switchGem(int directionToSwitch)
   sprites.drawPlusMask((selectorXpos * GEM_PIXELS) + PLAYFIELD_ZERO_X, ((selectorYpos + 1) * GEM_PIXELS) + PLAYFIELD_ZERO_Y, gemsSmall_plus_mask,0);
   sprites.drawPlusMask((selectorXpos * GEM_PIXELS) + PLAYFIELD_ZERO_X, ((selectorYpos - 1) * GEM_PIXELS) + PLAYFIELD_ZERO_Y, gemsSmall_plus_mask,0);
   testingSwitch = 0;
-  if (modeIsSelected == true)arduboy.audio.tone(330, 25);
+  if (modeIsSelected == true) sound.tone(330, 25);
 }
 
 void updateStage()

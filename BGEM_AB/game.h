@@ -10,7 +10,7 @@ boolean objectVisible;
 
 void stateMenuPlay()
 {
-  arduboy.clearDisplay();
+  arduboy.clear();
   level = level = LEVEL_TO_START_WITH - 1;
   scorePlayer = 0;
   initPlayfield();
@@ -29,7 +29,7 @@ void stateMenuPlay()
   if (arduboy.justPressed(LEFT_BUTTON) && (gameMode > 1)) gameMode--;
   if (arduboy.justPressed(A_BUTTON | B_BUTTON))
   {
-    arduboy.clearDisplay();
+    arduboy.clear();
     gameState = STATE_GAME_PLAYING;
   }
 };
@@ -84,7 +84,7 @@ void stateGamePause()
   sprites.drawSelfMasked(33, 52, gameWords, 3);
   if (arduboy.justPressed(A_BUTTON))
   {
-    arduboy.clearDisplay();
+    arduboy.clear();
     gameState = STATE_GAME_PLAYING;
   }
 }
@@ -97,7 +97,7 @@ void stateGameOver()
   drawScore(41, 52, SCORE_BIG);
   if (arduboy.justPressed(A_BUTTON | B_BUTTON))
   {
-    arduboy.clearDisplay();
+    arduboy.clear();
     gameState = STATE_MENU_MAIN;
   }
 };
