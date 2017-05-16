@@ -1,6 +1,5 @@
 # BEGEMMED
-![Image]
-(http://www.team-arg.org/masterfiles/team-arg-bgem/images/banner-ID-30.png)
+![Image](http://www.team-arg.org/masterfiles/team-arg-bgem/images/banner-ID-30.png)
 
 BEGEMMED : http://www.team-arg.org/bgem-manual.html  
 **Download latest Arduboy version and source :** https://github.com/TEAMarg/ID-30-BEGEMMED/releases/latest  
